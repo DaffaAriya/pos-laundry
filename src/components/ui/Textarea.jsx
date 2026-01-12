@@ -3,17 +3,16 @@
 import { forwardRef } from 'react'
 import { cn } from '@/lib/utils'
 
-const Select = forwardRef(({
+const Textarea = forwardRef(({
   label,
   error,
   helperText,
-  options = [],
-  placeholder = 'Pilih opsi',
   fullWidth = true,
   className,
   containerClassName,
   required,
   disabled,
+  rows = 4,
   ...props
 }, ref) => {
   const hasError = !!error
@@ -27,16 +26,16 @@ const Select = forwardRef(({
         </label>
       )}
       
-      <select
+      <textarea
         ref={ref}
+        rows={rows}
         disabled={disabled}
         className={cn(
           'block w-full rounded-lg border transition-colors duration-200',
           'px-4 py-2.5 text-base sm:text-sm',
+          'placeholder:text-gray-400',
           'focus:outline-none focus:ring-2 focus:ring-offset-0',
-          'appearance-none bg-white',
-          'bg-[url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3E%3Cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'m6 8 4 4 4-4\'/%3E%3C/svg%3E")]',
-          'bg-size-[1.5em_1.5em] bg-position-[right_0.5rem_center] bg-no-repeat pr-10',
+          'resize-none',
           hasError 
             ? 'border-red-300 focus:border-red-500 focus:ring-red-500' 
             : 'border-gray-300 focus:border-primary-500 focus:ring-primary-500',
@@ -44,20 +43,7 @@ const Select = forwardRef(({
           className
         )}
         {...props}
-      >
-        <option value="" disabled>
-          {placeholder}
-        </option>
-        {options.map((option) => (
-          <option 
-            key={option.value} 
-            value={option.value}
-            disabled={option.disabled}
-          >
-            {option.label}
-          </option>
-        ))}
-      </select>
+      />
       
       {(error || helperText) && (
         <p className={cn(
@@ -71,6 +57,6 @@ const Select = forwardRef(({
   )
 })
 
-Select.displayName = 'Select'
+Textarea.displayName = 'Textarea'
 
-export default Select
+export default Textarea
