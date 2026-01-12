@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { requireRole } from '@/middleware/auth'
 import { handleApiError } from '@/middleware/errorHandler'
-import { startOfDay, endOfDay } from 'date-fns'
+import { startOfWeek, endOfWeek } from 'date-fns'
 
-// GET /api/reports/daily - Get daily report (OWNER only)
+// GET /api/reports/weekly - Get weekly report (OWNER only)
 export async function GET(request) {
   const { session, error } = await requireRole(request, ['OWNER'])
   if (error) return error
@@ -14,8 +14,8 @@ export async function GET(request) {
     const date = searchParams.get('date') || new Date().toISOString().split('T')[0]
     
     const targetDate = new Date(date)
-    const startDate = startOfDay(targetDate)
-    const endDate = endOfDay(targetDate)
+    const startDate = startOfWeek(targetDate)
+    const endDate = endOfWeek(targetDate)
     
     // Get transactions
     const transactions = await prisma.transaction.findMany({
@@ -69,12 +69,15 @@ export async function GET(request) {
     
     return NextResponse.json({
       success: true,
-      date,
+      period: {
+        start: startDate,
+        end: endDate,
+      },
       summary,
       transactions,
     })
     
   } catch (error) {
-    return handleApiError(error, 'Gagal mengambil laporan harian')
+    return handleApiError(error, 'Gagal mengambil laporan mingguan')
   }
 }
